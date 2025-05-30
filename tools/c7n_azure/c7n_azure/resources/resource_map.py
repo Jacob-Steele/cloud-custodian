@@ -11,6 +11,7 @@ ResourceMap = {
     "azure.open-shift": "c7n_azure.resources.open_shift.OpenShiftService",
     "azure.api-management": "c7n_azure.resources.apimanagement.ApiManagement",
     "azure.app-configuration": "c7n_azure.resources.app_configuration.AppConfiguration",
+    "azure.app-configuration-keys": "c7n_azure.resources.app_configuration_keys.AppConfigurationKeys",
     "azure.appserviceplan": "c7n_azure.resources.appserviceplan.AppServicePlan",
     "azure.application-gateway": "c7n_azure.resources.app_gateway.ApplicationGateway",
     "azure.armresource": "c7n_azure.resources.generic_arm_resource.GenericArmResource",
