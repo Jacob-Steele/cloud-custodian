@@ -16,26 +16,24 @@ class AppConfigurationKeysChildResource(ChildResourceManager):
         raise_on_exception = False
         annotate_parent = True
 
-    def get_data_client(self, parent_resource):
-        print(parent_resource)
-        print(parent_resource['properties']['endpoint'])
-        config = load(
-                    endpoint=parent_resource['properties']['endpoint'],
-                    credential=DefaultAzureCredential(),
-                    selects=[SettingSelector(key_filter="*")])
-        return config
+    def get_appconfiguration_client(self, parent_resource):
+        client = AzureAppConfigurationClient(base_url=parent_resource['properties']['endpoint'],
+                                             credential=DefaultAzureCredential())
+        return client
 
 @resources.register('app-configuration-keys')
 class AppConfigurationKeys(AppConfigurationKeysChildResource):
     """App Configuration Keys Resource using Data Plane API"""
     
     def enumerate_resources(self, parent_resource, type_info, vault_url=None, **params):
-        data_client = self.get_data_client(parent_resource)
-        print("DATA")
-        print(data_client.keys())
-        print(data_client.items())
-        print(data_client["message"])
-        return []
+        appconfiguration_client = self.get_appconfiguration_client(parent_resource)
+        print("List configuration settings")
+        config_settings = appconfiguration_client.list_configuration_settings(key_filter="*")
+        key_values = []
+        for config_setting in config_settings:
+            key_values += config_setting
+        print(config_settings)
+        return key_values
 
     # class resource_type(ChildTypeInfo):
     #     doc_groups = ['Integration']
