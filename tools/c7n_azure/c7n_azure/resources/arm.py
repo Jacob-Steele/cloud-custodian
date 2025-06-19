@@ -42,6 +42,7 @@ class ArmResourceManager(QueryResourceManager, metaclass=QueryMeta):
     def augment(self, resources):
         for resource in resources:
             if 'id' in resource:
+                print(resource)
                 resource['resourceGroup'] = ResourceIdParser.get_resource_group(resource['id'])
         return resources
 

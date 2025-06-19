@@ -44,6 +44,8 @@ class ResourceIdParser:
     def get_resource_group(resource_id):
         result = parse_resource_id(resource_id).get("resource_group")
         # parse_resource_id fails to parse resource id for resource groups
+        print(resource_id)
+        print(result)
         if result is None:
             return resource_id.split('/')[4]
         return result
@@ -125,6 +127,8 @@ def custodian_azure_send_override(self, request, headers=None, content=None, **k
     retries = 0
     max_retries = 8
     while retries < max_retries:
+        send_logger.debug(request)
+        print("HERE")
         response = self.orig_send(request, headers, content, **kwargs)
 
         send_logger.debug(response.status_code)
@@ -636,6 +640,8 @@ class C7nRetryPolicy(RetryPolicy):
 def log_response_data(response):
     http_response = response.http_response
     send_logger.debug(http_response.status_code)
+    send_logger.debug(http_response.url)
+    send_logger.debug(http_response.content)
     for k, v in http_response.headers.items():
         if k.startswith('x-ms-ratelimit'):
             send_logger.debug(k + ':' + v)

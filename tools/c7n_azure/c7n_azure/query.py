@@ -271,6 +271,7 @@ class QueryResourceManager(ResourceManager, metaclass=QueryMeta):
         cache_key = self.get_cache_key(query)
 
         resources = None
+        print(resources)
         if self._cache.load():
             resources = self._cache.get(cache_key)
             if resources is not None:
@@ -281,6 +282,7 @@ class QueryResourceManager(ResourceManager, metaclass=QueryMeta):
 
         if resources is None:
             with self.ctx.tracer.subsegment('resource-fetch'):
+                print(query)
                 resources = self.source.get_resources(query)
             if augment:
                 with self.ctx.tracer.subsegment('resource-augment'):
@@ -387,6 +389,8 @@ class ChildResourceManager(QueryResourceManager, metaclass=QueryMeta):
     def get_session(self):
         if self._session is None:
             session = super(ChildResourceManager, self).get_session()
+            print("HERE")
+            print(self.resource_type.resource)
             if self.resource_type.resource != DEFAULT_RESOURCE_AUTH_ENDPOINT:
                 session = session.get_session_for_resource(self.resource_type.resource)
             self._session = session
@@ -419,6 +423,7 @@ class ChildResourceManager(QueryResourceManager, metaclass=QueryMeta):
             return [(r.serialize(True) if hasattr(r, 'serialize') else serialize(r))
                     for r in result]
         elif hasattr(result, 'value'):
+            
             return [r.serialize(True) for r in result.value]
 
         raise TypeError("Enumerating resources resulted in a return"
